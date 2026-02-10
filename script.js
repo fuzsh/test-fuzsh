@@ -175,17 +175,76 @@ function drawBuildingScene(){
 function drawStreetScene(){
   const c=document.getElementById('streetCanvas'),ctx=c.getContext('2d');ctx.imageSmoothingEnabled=false;
   ctx.fillStyle='#4a4a4a';ctx.fillRect(0,0,c.width,c.height);
-  ctx.fillStyle='#707070';ctx.fillRect(40,20,300,160);ctx.fillStyle='#686868';ctx.fillRect(340,20,200,160);
-  for(let r=0;r<3;r++)for(let c2=0;c2<6;c2++){ctx.fillStyle=(r===0&&c2===2)?'#aab8cc':'#5a5a6a';ctx.fillRect(60+c2*46,35+r*48,30,35);}
-  ctx.fillStyle='#656565';ctx.fillRect(560,20,260,160);
-  for(let r=0;r<3;r++)for(let c2=0;c2<4;c2++){ctx.fillStyle='#5a5a6a';ctx.fillRect(580+c2*56,35+r*48,36,35);}
-  ctx.fillStyle='#808080';ctx.fillRect(0,170,1560,30);ctx.fillStyle='#505050';ctx.fillRect(0,200,1560,240);
-  // Crosswalk - clean vertical stripes near traffic light
+
+  // === 3D PIXEL BUILDINGS ===
+  // Building 1 (left, tall)
+  ctx.fillStyle='#737373';ctx.fillRect(40,10,158,170);
+  ctx.fillStyle='#606060';ctx.fillRect(198,14,10,166);
+  ctx.fillStyle='#858585';ctx.fillRect(40,6,168,6);
+  ctx.fillStyle='#7d7d7d';ctx.fillRect(40,70,158,3);ctx.fillRect(40,125,158,3);
+  ctx.fillStyle='#555';ctx.fillRect(40,178,168,3);
+  for(let r=0;r<3;r++)for(let c2=0;c2<4;c2++){
+    const wx=52+c2*38,wy=18+r*55;
+    ctx.fillStyle='#4a4a55';ctx.fillRect(wx-1,wy-1,28,38);
+    ctx.fillStyle=(r===0&&c2===1)?'#8aa0bb':'#5a5a6a';ctx.fillRect(wx,wy,26,36);
+    ctx.fillStyle='#666';ctx.fillRect(wx+12,wy,2,36);ctx.fillRect(wx,wy+17,26,2);
+    ctx.fillStyle='#808080';ctx.fillRect(wx-1,wy+36,28,2);
+  }
+  ctx.fillStyle='#666';ctx.fillRect(110,0,2,10);ctx.fillStyle='#f33';ctx.fillRect(109,0,4,2);
+
+  // Building 2 (center-left, shorter)
+  ctx.fillStyle='#6b6b6b';ctx.fillRect(212,32,148,148);
+  ctx.fillStyle='#5a5a5a';ctx.fillRect(360,36,10,144);
+  ctx.fillStyle='#7b7b7b';ctx.fillRect(212,28,158,6);
+  ctx.fillStyle='#737373';ctx.fillRect(212,90,148,3);ctx.fillRect(212,142,148,3);
+  ctx.fillStyle='#505050';ctx.fillRect(212,178,158,3);
+  for(let r=0;r<3;r++)for(let c2=0;c2<3;c2++){
+    const wx=228+c2*46,wy=42+r*50;
+    ctx.fillStyle='#4a4a55';ctx.fillRect(wx-1,wy-1,32,34);
+    ctx.fillStyle='#5a5a6a';ctx.fillRect(wx,wy,30,32);
+    ctx.fillStyle='#666';ctx.fillRect(wx+14,wy,2,32);ctx.fillRect(wx,wy+15,30,2);
+    ctx.fillStyle='#808080';ctx.fillRect(wx-1,wy+32,32,2);
+  }
+
+  // Building 3 (center-right, medium)
+  ctx.fillStyle='#707070';ctx.fillRect(374,18,182,162);
+  ctx.fillStyle='#5c5c5c';ctx.fillRect(556,22,10,158);
+  ctx.fillStyle='#828282';ctx.fillRect(374,14,192,6);
+  ctx.fillStyle='#787878';ctx.fillRect(374,76,182,3);ctx.fillRect(374,130,182,3);
+  ctx.fillStyle='#525252';ctx.fillRect(374,178,192,3);
+  for(let r=0;r<3;r++)for(let c2=0;c2<4;c2++){
+    const wx=388+c2*44,wy=28+r*54;
+    ctx.fillStyle='#4a4a55';ctx.fillRect(wx-1,wy-1,30,36);
+    ctx.fillStyle='#5a5a6a';ctx.fillRect(wx,wy,28,34);
+    ctx.fillStyle='#666';ctx.fillRect(wx+13,wy,2,34);ctx.fillRect(wx,wy+16,28,2);
+    ctx.fillStyle='#808080';ctx.fillRect(wx-1,wy+34,30,2);
+  }
+
+  // Building 4 (right, tallest)
+  ctx.fillStyle='#6e6e6e';ctx.fillRect(570,5,252,175);
+  ctx.fillStyle='#5a5a5a';ctx.fillRect(822,10,10,170);
+  ctx.fillStyle='#808080';ctx.fillRect(570,1,262,6);
+  ctx.fillStyle='#767676';ctx.fillRect(570,60,252,3);ctx.fillRect(570,115,252,3);
+  ctx.fillStyle='#4e4e4e';ctx.fillRect(570,178,262,3);
+  for(let r=0;r<3;r++)for(let c2=0;c2<5;c2++){
+    const wx=584+c2*48,wy=14+r*55;
+    ctx.fillStyle='#4a4a55';ctx.fillRect(wx-1,wy-1,34,38);
+    ctx.fillStyle='#5a5a6a';ctx.fillRect(wx,wy,32,36);
+    ctx.fillStyle='#666';ctx.fillRect(wx+15,wy,2,36);ctx.fillRect(wx,wy+17,32,2);
+    ctx.fillStyle='#808080';ctx.fillRect(wx-1,wy+36,34,2);
+  }
+  ctx.fillStyle='#777';ctx.fillRect(780,0,30,5);ctx.fillStyle='#999';ctx.fillRect(782,1,26,3);
+
+  // === SIDEWALK & ROAD ===
+  ctx.fillStyle='#808080';ctx.fillRect(0,170,1560,30);
+  ctx.fillStyle='#505050';ctx.fillRect(0,200,1560,240);
+  // Crosswalk - clean vertical stripes
   ctx.fillStyle='#c8b860';
   for(let i=0;i<7;i++){ctx.fillRect(586+i*20,204,12,230);}
   // Center dashed line
   ctx.fillStyle='#c8b860';for(let i=0;i<20;i++)ctx.fillRect(i*80+20,316,50,4);
   drawArrow(ctx,860,280);drawArrow(ctx,1100,340);
+  // Traffic light
   ctx.fillStyle='#555';ctx.fillRect(650,50,6,155);ctx.fillStyle='#666';ctx.fillRect(636,46,34,8);
   ctx.fillStyle='#884444';ctx.fillRect(645,38,8,10);ctx.fillStyle='#cc3333';ctx.fillRect(647,40,4,4);
   drawStreetCharacter(ctx,660,135);ctx.fillStyle='#707070';ctx.fillRect(0,196,1560,6);
@@ -219,24 +278,49 @@ function drawContactArt(){
   ctx.fillStyle='#c0392b';ctx.fillRect(85,155,10,3);
 }
 
-// Street car spawner
-function drawPixelCar(ctx,x,y){
-  const colors=['#cc3333','#3366cc','#33aa55','#ccaa33','#cc6633'];
-  const color=colors[Math.floor(Math.random()*colors.length)];
+// ===== CAR ANIMATION SYSTEM =====
+const activeCars=[];
+const carColors=['#cc3333','#3366cc','#33aa55','#ccaa33','#cc6633'];
+
+function drawAnimatedCar(ctx,car){
+  const {x,y,color,dir}=car;
+  ctx.save();
+  if(dir<0){ctx.translate(x+40,0);ctx.scale(-1,1);ctx.translate(-(x+40),0);}
   ctx.fillStyle=color;ctx.fillRect(x,y,80,24);ctx.fillRect(x+16,y-14,44,16);
   ctx.fillStyle='#aaccee';ctx.fillRect(x+20,y-12,16,12);ctx.fillRect(x+40,y-12,16,12);
   ctx.fillStyle='#222';ctx.fillRect(x+8,y+22,16,8);ctx.fillRect(x+56,y+22,16,8);
   ctx.fillStyle='#888';ctx.fillRect(x+12,y+24,8,4);ctx.fillRect(x+60,y+24,8,4);
   ctx.fillStyle='#ffee88';ctx.fillRect(x+76,y+4,6,6);ctx.fillStyle='#ff3333';ctx.fillRect(x-2,y+4,4,6);
+  ctx.restore();
 }
 
 // ===== INIT =====
 window.addEventListener('DOMContentLoaded',()=>{
   drawMainCharacter();drawServerIcon();drawAvatar();drawBuildingScene();drawStreetScene();
 
-  // Traffic light blink
   const sc=document.getElementById('streetCanvas'),sctx=sc.getContext('2d');
-  let ls=true;setInterval(()=>{ls=!ls;sctx.fillStyle=ls?'#ff3333':'#883333';sctx.fillRect(647,40,4,4);},1000);
+  // Save background for animation restore (hardware-accelerated via drawImage)
+  const bgCanvas=document.createElement('canvas');
+  bgCanvas.width=sc.width;bgCanvas.height=sc.height;
+  bgCanvas.getContext('2d').drawImage(sc,0,0);
+
+  // Animation loop: cars + traffic light
+  let lastBlink=0,blinkOn=true;
+  function animateStreet(ts){
+    sctx.drawImage(bgCanvas,0,0);
+    // Traffic light blink
+    if(ts-lastBlink>1000){blinkOn=!blinkOn;lastBlink=ts;}
+    sctx.fillStyle=blinkOn?'#ff3333':'#883333';sctx.fillRect(647,40,4,4);
+    // Update and draw cars
+    for(let i=activeCars.length-1;i>=0;i--){
+      const car=activeCars[i];
+      car.x+=car.speed*car.dir;
+      if(car.x>1620||car.x<-120){activeCars.splice(i,1);continue;}
+      drawAnimatedCar(sctx,car);
+    }
+    requestAnimationFrame(animateStreet);
+  }
+  requestAnimationFrame(animateStreet);
 
   // Neon flicker
   const bc=document.getElementById('buildingCanvas'),bctx=bc.getContext('2d');
@@ -244,10 +328,15 @@ window.addEventListener('DOMContentLoaded',()=>{
     bctx.fillStyle='#fff';bctx.font='bold 22px "Silkscreen",monospace';bctx.fillText('MAC',60,102);
     bctx.font='bold 18px "Silkscreen",monospace';bctx.fillText('PARKING',56,126);},3000);
 
-  // Street click car spawn
+  // Click to spawn moving cars (upper lane=right, lower lane=left)
   sc.addEventListener('click',e=>{const r=sc.getBoundingClientRect();
     const x=(e.clientX-r.left)*(sc.width/r.width),y=(e.clientY-r.top)*(sc.height/r.height);
-    if(y>200&&y<420)drawPixelCar(sctx,x-40,y-15);});
+    if(y>200&&y<420){
+      const dir=y<316?1:-1;
+      const color=carColors[Math.floor(Math.random()*carColors.length)];
+      const speed=1.5+Math.random()*2;
+      activeCars.push({x:x-40,y:y-15,color,dir,speed});
+    }});
 
   // Hash routing
   navigateTo(window.location.hash.replace('#','')||'about');
