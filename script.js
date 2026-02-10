@@ -172,6 +172,250 @@ function drawBuildingScene(){
   ctx.fillStyle='#888';ctx.fillRect(472,296,20,8);
 }
 
+// ===== AALTO LOGO PIXEL ART =====
+function drawAaltoLogo(canvas, variant) {
+  const ctx = canvas.getContext('2d'); ctx.imageSmoothingEnabled = false;
+  const w = canvas.width, h = canvas.height;
+
+  // Background
+  const bgColors = { main: '#1a1a2e', alt: '#2a1a1e', dark: '#0e0e1a' };
+  ctx.fillStyle = bgColors[variant] || bgColors.main;
+  ctx.fillRect(0, 0, w, h);
+
+  // Grid pattern
+  ctx.fillStyle = '#ffffff08';
+  for (let x = 0; x < w; x += 20) ctx.fillRect(x, 0, 1, h);
+  for (let y = 0; y < h; y += 20) ctx.fillRect(0, y, w, 1);
+
+  // Aalto "A" mark - geometric pixel art version
+  const cx = w / 2, cy = h / 2 - 30;
+  const s = 6; // pixel scale
+
+  // The Aalto "A" - a bold geometric shape
+  ctx.fillStyle = '#ff6b35';
+  // Left leg
+  for (let i = 0; i < 16; i++) {
+    ctx.fillRect(cx - 12 * s + i * s * 0.5, cy + i * s, s * 3, s);
+  }
+  // Right leg
+  for (let i = 0; i < 16; i++) {
+    ctx.fillRect(cx + 4 * s - i * s * 0.5, cy + i * s, s * 3, s);
+  }
+  // Crossbar
+  ctx.fillStyle = '#ffaa33';
+  ctx.fillRect(cx - 5 * s, cy + 9 * s, s * 10, s * 2);
+
+  // Peak/apex triangle
+  ctx.fillStyle = '#ff8844';
+  ctx.fillRect(cx - s, cy - s, s * 2, s);
+  ctx.fillRect(cx - s * 0.5, cy - s * 2, s, s);
+
+  // "AALTO" text below
+  ctx.fillStyle = '#ffffff';
+  ctx.font = 'bold 40px "Silkscreen", monospace';
+  ctx.textAlign = 'center';
+  ctx.fillText('AALTO', cx, cy + 20 * s);
+
+  // "UNIVERSITY" subtitle
+  ctx.fillStyle = '#7ec8e3';
+  ctx.font = '20px "Silkscreen", monospace';
+  ctx.fillText('UNIVERSITY', cx, cy + 24 * s);
+
+  // Decorative corners
+  ctx.fillStyle = '#ff6b3544';
+  ctx.fillRect(0, 0, 40, 4); ctx.fillRect(0, 0, 4, 40);
+  ctx.fillRect(w - 40, 0, 40, 4); ctx.fillRect(w - 4, 0, 4, 40);
+  ctx.fillRect(0, h - 4, 40, 4); ctx.fillRect(0, h - 40, 4, 40);
+  ctx.fillRect(w - 40, h - 4, 40, 4); ctx.fillRect(w - 4, h - 40, 4, 40);
+
+  ctx.textAlign = 'start';
+}
+
+// Draw Aalto-themed side faces
+function drawAaltoSideFace(canvas, label) {
+  const ctx = canvas.getContext('2d'); ctx.imageSmoothingEnabled = false;
+  const w = canvas.width, h = canvas.height;
+
+  // Dark gradient background
+  ctx.fillStyle = '#1a1a2e';
+  ctx.fillRect(0, 0, w, h);
+
+  // Vertical stripes pattern
+  ctx.fillStyle = '#ffffff06';
+  for (let x = 0; x < w; x += 16) ctx.fillRect(x, 0, 8, h);
+
+  // Glowing Aalto "A" watermark in center
+  const cx = w / 2, cy = h / 2 - 40;
+  const s = 8;
+  ctx.fillStyle = '#ff6b3522';
+  for (let i = 0; i < 14; i++) {
+    ctx.fillRect(cx - 10 * s + i * s * 0.5, cy + i * s, s * 3, s);
+    ctx.fillRect(cx + 3 * s - i * s * 0.5, cy + i * s, s * 3, s);
+  }
+  ctx.fillStyle = '#ffaa3322';
+  ctx.fillRect(cx - 4 * s, cy + 8 * s, s * 8, s * 2);
+
+  // Label text
+  ctx.fillStyle = '#7ec8e3';
+  ctx.font = 'bold 28px "Silkscreen", monospace';
+  ctx.textAlign = 'center';
+  ctx.fillText(label, w / 2, h - 100);
+
+  // Pixel dots decoration
+  ctx.fillStyle = '#ff6b3555';
+  for (let i = 0; i < 20; i++) {
+    const px = Math.sin(i * 137.5) * w * 0.35 + w / 2;
+    const py = Math.cos(i * 137.5) * h * 0.3 + h / 2;
+    ctx.fillRect(px, py, 4, 4);
+  }
+
+  ctx.textAlign = 'start';
+}
+
+function drawCubeTopBottom(canvas, isTop) {
+  const ctx = canvas.getContext('2d'); ctx.imageSmoothingEnabled = false;
+  const w = canvas.width, h = canvas.height;
+
+  ctx.fillStyle = isTop ? '#2a2a3e' : '#151525';
+  ctx.fillRect(0, 0, w, h);
+
+  // Grid
+  ctx.fillStyle = '#ffffff0a';
+  for (let x = 0; x < w; x += 24) for (let y = 0; y < h; y += 24) {
+    ctx.fillRect(x, y, 1, 24); ctx.fillRect(x, y, 24, 1);
+  }
+
+  // Center Aalto "A" icon small
+  const cx = w / 2, cy = h / 2;
+  ctx.fillStyle = isTop ? '#ff6b3566' : '#ff6b3533';
+  const s = 5;
+  for (let i = 0; i < 10; i++) {
+    ctx.fillRect(cx - 7 * s + i * s * 0.5, cy - 5 * s + i * s, s * 2, s);
+    ctx.fillRect(cx + 2 * s - i * s * 0.5, cy - 5 * s + i * s, s * 2, s);
+  }
+  ctx.fillStyle = isTop ? '#ffaa3366' : '#ffaa3333';
+  ctx.fillRect(cx - 3 * s, cy + s, s * 6, s);
+}
+
+// ===== 3D CUBE ROTATION =====
+function initCubeRotation() {
+  const scene = document.getElementById('buildingScene');
+  const cube = document.getElementById('buildingCube');
+  let isDragging = false;
+  let rotX = -5, rotY = -15;
+  let startX, startY;
+  let autoRotate = true;
+  let autoRotateId;
+  let momentum = { x: 0, y: 0 };
+
+  function updateTransform() {
+    cube.style.transform = 'rotateX(' + rotX + 'deg) rotateY(' + rotY + 'deg)';
+  }
+
+  // Auto-rotate slowly
+  function startAutoRotate() {
+    autoRotate = true;
+    function tick() {
+      if (!autoRotate) return;
+      rotY += 0.15;
+      updateTransform();
+      autoRotateId = requestAnimationFrame(tick);
+    }
+    autoRotateId = requestAnimationFrame(tick);
+  }
+
+  // Mouse drag
+  scene.addEventListener('mousedown', function(e) {
+    isDragging = true;
+    autoRotate = false;
+    if (autoRotateId) cancelAnimationFrame(autoRotateId);
+    startX = e.clientX;
+    startY = e.clientY;
+    momentum = { x: 0, y: 0 };
+    cube.style.transition = 'none';
+    e.preventDefault();
+  });
+
+  document.addEventListener('mousemove', function(e) {
+    if (!isDragging) return;
+    const dx = e.clientX - startX;
+    const dy = e.clientY - startY;
+    momentum = { x: dy * 0.3, y: dx * 0.3 };
+    rotY += dx * 0.4;
+    rotX -= dy * 0.4;
+    rotX = Math.max(-60, Math.min(60, rotX));
+    startX = e.clientX;
+    startY = e.clientY;
+    updateTransform();
+  });
+
+  document.addEventListener('mouseup', function() {
+    if (!isDragging) return;
+    isDragging = false;
+    cube.style.transition = 'transform 0.1s ease-out';
+    // Apply momentum
+    let mX = momentum.x, mY = momentum.y;
+    function applyMomentum() {
+      if (Math.abs(mX) < 0.05 && Math.abs(mY) < 0.05) {
+        setTimeout(startAutoRotate, 2000);
+        return;
+      }
+      rotX -= mX; rotY += mY;
+      rotX = Math.max(-60, Math.min(60, rotX));
+      mX *= 0.92; mY *= 0.92;
+      updateTransform();
+      requestAnimationFrame(applyMomentum);
+    }
+    applyMomentum();
+  });
+
+  // Touch support
+  scene.addEventListener('touchstart', function(e) {
+    isDragging = true;
+    autoRotate = false;
+    if (autoRotateId) cancelAnimationFrame(autoRotateId);
+    startX = e.touches[0].clientX;
+    startY = e.touches[0].clientY;
+    momentum = { x: 0, y: 0 };
+    cube.style.transition = 'none';
+  }, { passive: true });
+
+  scene.addEventListener('touchmove', function(e) {
+    if (!isDragging) return;
+    const dx = e.touches[0].clientX - startX;
+    const dy = e.touches[0].clientY - startY;
+    momentum = { x: dy * 0.3, y: dx * 0.3 };
+    rotY += dx * 0.4;
+    rotX -= dy * 0.4;
+    rotX = Math.max(-60, Math.min(60, rotX));
+    startX = e.touches[0].clientX;
+    startY = e.touches[0].clientY;
+    updateTransform();
+    e.preventDefault();
+  }, { passive: false });
+
+  scene.addEventListener('touchend', function() {
+    if (!isDragging) return;
+    isDragging = false;
+    cube.style.transition = 'transform 0.1s ease-out';
+    let mX = momentum.x, mY = momentum.y;
+    function applyMomentum() {
+      if (Math.abs(mX) < 0.05 && Math.abs(mY) < 0.05) {
+        setTimeout(startAutoRotate, 2000);
+        return;
+      }
+      rotX -= mX; rotY += mY;
+      rotX = Math.max(-60, Math.min(60, rotX));
+      mX *= 0.92; mY *= 0.92;
+      updateTransform();
+      requestAnimationFrame(applyMomentum);
+    }
+    applyMomentum();
+  });
+
+  startAutoRotate();
+}
+
 function drawStreetScene(){
   const c=document.getElementById('streetCanvas'),ctx=c.getContext('2d');ctx.imageSmoothingEnabled=false;
   ctx.fillStyle='#4a4a4a';ctx.fillRect(0,0,c.width,c.height);
@@ -296,7 +540,15 @@ function drawAnimatedCar(ctx,car){
 
 // ===== INIT =====
 window.addEventListener('DOMContentLoaded',()=>{
-  drawMainCharacter();drawServerIcon();drawAvatar();drawBuildingScene();drawStreetScene();
+  drawMainCharacter();drawServerIcon();drawAvatar();
+  drawBuildingScene();
+  drawAaltoLogo(document.getElementById('cubeFaceBack'), 'main');
+  drawAaltoSideFace(document.getElementById('cubeFaceRight'), 'CS DEPT');
+  drawAaltoSideFace(document.getElementById('cubeFaceLeft'), 'RESEARCH');
+  drawCubeTopBottom(document.getElementById('cubeFaceTop'), true);
+  drawCubeTopBottom(document.getElementById('cubeFaceBottom'), false);
+  initCubeRotation();
+  drawStreetScene();
 
   const sc=document.getElementById('streetCanvas'),sctx=sc.getContext('2d');
   // Save background for animation restore (hardware-accelerated via drawImage)

@@ -207,8 +207,31 @@ body {
 
 .about-main-content { display: flex; padding: 12px 20px; gap: 20px; }
 
-.building-scene { flex-shrink: 0; width: 260px; height: 300px; }
-.building-scene canvas { width: 100%; height: 100%; image-rendering: pixelated; }
+.building-scene {
+  flex-shrink: 0; width: 260px; height: 300px;
+  perspective: 800px;
+  cursor: grab;
+}
+.building-scene:active { cursor: grabbing; }
+.cube {
+  width: 100%; height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+  transform: rotateX(-5deg) rotateY(-15deg);
+  transition: transform 0.1s ease-out;
+}
+.cube-face {
+  position: absolute; width: 100%; height: 100%;
+  backface-visibility: hidden;
+  overflow: hidden;
+}
+.cube-face canvas { width: 100%; height: 100%; image-rendering: pixelated; }
+.cube-front  { transform: translateZ(130px); }
+.cube-back   { transform: rotateY(180deg) translateZ(130px); }
+.cube-right  { transform: rotateY(90deg) translateZ(130px); }
+.cube-left   { transform: rotateY(-90deg) translateZ(130px); }
+.cube-top    { transform: rotateX(90deg) translateZ(150px); }
+.cube-bottom { transform: rotateX(-90deg) translateZ(150px); }
 
 .about-text-section {
   flex: 1; max-height: 300px; overflow-y: auto; padding-right: 6px; padding-top: 5px;
@@ -462,7 +485,7 @@ canvas { image-rendering: pixelated; image-rendering: -moz-crisp-edges; image-re
   .about-interview-right { display: none; }
 
   .about-main-content { flex-direction: column; padding: 12px 14px; gap: 14px; }
-  .building-scene { width: 100%; height: 200px; }
+  .building-scene { width: 100%; height: 200px; perspective: 600px; }
   .about-text-section { max-height: none; overflow-y: visible; padding-right: 0; }
 
   .street-scene { height: auto; }
