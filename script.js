@@ -180,10 +180,11 @@ function drawStreetScene(){
   ctx.fillStyle='#656565';ctx.fillRect(560,20,260,160);
   for(let r=0;r<3;r++)for(let c2=0;c2<4;c2++){ctx.fillStyle='#5a5a6a';ctx.fillRect(580+c2*56,35+r*48,36,35);}
   ctx.fillStyle='#808080';ctx.fillRect(0,170,1560,30);ctx.fillStyle='#505050';ctx.fillRect(0,200,1560,240);
+  // Crosswalk - clean vertical stripes near traffic light
   ctx.fillStyle='#c8b860';
-  for(let i=0;i<8;i++){ctx.save();ctx.translate(700+i*40,210);ctx.transform(1,0.5,0,1,0,0);ctx.fillRect(0,0,20,160);ctx.restore();}
-  for(let i=0;i<6;i++){ctx.save();ctx.translate(1000,220+i*30);ctx.transform(1,0,0.5,1,0,0);ctx.fillRect(0,0,200,14);ctx.restore();}
-  ctx.fillStyle='#c8b860';for(let i=0;i<12;i++)ctx.fillRect(i*80+20,310,50,4);
+  for(let i=0;i<7;i++){ctx.fillRect(586+i*20,204,12,230);}
+  // Center dashed line
+  ctx.fillStyle='#c8b860';for(let i=0;i<20;i++)ctx.fillRect(i*80+20,316,50,4);
   drawArrow(ctx,860,280);drawArrow(ctx,1100,340);
   ctx.fillStyle='#555';ctx.fillRect(650,50,6,155);ctx.fillStyle='#666';ctx.fillRect(636,46,34,8);
   ctx.fillStyle='#884444';ctx.fillRect(645,38,8,10);ctx.fillStyle='#cc3333';ctx.fillRect(647,40,4,4);
