@@ -199,6 +199,7 @@ function init3DBuilding(){
   };
 
   var bldg = new THREE.Group();
+  var flagMeshes = [];
 
   // Right wing (3 floors, main long section)
   function createRightWing() {
@@ -336,14 +337,34 @@ function init3DBuilding(){
     door.position.set(-15, 1.7, 8.15); g.add(door);
     var doorGlass = new THREE.Mesh(new THREE.BoxGeometry(2.4, 2.4, 0.1), M.glass);
     doorGlass.position.set(-15, 1.8, 8.2); g.add(doorGlass);
-    var signBg = new THREE.Mesh(new THREE.BoxGeometry(1.5, 1.5, 0.15), M.white);
-    signBg.position.set(-12, 2.5, 8.15); g.add(signBg);
+    // Aalto "A!" logo sign
+    var signBg = new THREE.Mesh(new THREE.BoxGeometry(2.2, 1.8, 0.15), M.white);
+    signBg.position.set(-11.8, 2.6, 8.15); g.add(signBg);
+    // Bold geometric "A" with triangular cutout
     var aShape = new THREE.Shape();
-    aShape.moveTo(0, 0); aShape.lineTo(0.4, 0.9); aShape.lineTo(0.8, 0);
-    aShape.lineTo(0.65, 0); aShape.lineTo(0.4, 0.5); aShape.lineTo(0.15, 0); aShape.closePath();
-    var aGeo = new THREE.ExtrudeGeometry(aShape, { depth: 0.06, bevelEnabled: false });
+    aShape.moveTo(0, 0);
+    aShape.lineTo(0.45, 1.1);
+    aShape.lineTo(0.9, 0);
+    aShape.lineTo(0.72, 0);
+    aShape.lineTo(0.62, 0.22);
+    aShape.lineTo(0.28, 0.22);
+    aShape.lineTo(0.18, 0);
+    aShape.closePath();
+    var aHole = new THREE.Path();
+    aHole.moveTo(0.33, 0.32);
+    aHole.lineTo(0.45, 0.65);
+    aHole.lineTo(0.57, 0.32);
+    aHole.closePath();
+    aShape.holes.push(aHole);
+    var aGeo = new THREE.ExtrudeGeometry(aShape, { depth: 0.08, bevelEnabled: false });
     var aMesh = new THREE.Mesh(aGeo, M.windowFrame);
-    aMesh.position.set(-12.4, 2, 8.25); g.add(aMesh);
+    aMesh.position.set(-12.6, 2.0, 8.2); g.add(aMesh);
+    // Exclamation mark "!" bar
+    var excBar = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.75, 0.08), M.windowFrame);
+    excBar.position.set(-11.5, 2.55, 8.25); g.add(excBar);
+    // Exclamation mark "!" dot
+    var excDot = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.14, 0.08), M.windowFrame);
+    excDot.position.set(-11.5, 2.05, 8.25); g.add(excDot);
     return g;
   }
 
@@ -377,7 +398,7 @@ function init3DBuilding(){
     return g;
   }
 
-  // Flagpoles
+  // Flagpoles with waving flags
   function createFlagpoles() {
     var g = new THREE.Group();
     var positions = [
@@ -388,8 +409,17 @@ function init3DBuilding(){
     positions.forEach(function(p) {
       var pole = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.06, 12, 6), M.metal);
       pole.position.set(p.x, 6, p.z); pole.castShadow = true; g.add(pole);
-      var flag = new THREE.Mesh(new THREE.PlaneGeometry(1.5, 1), p.flagMat);
-      flag.position.set(p.x + 0.8, 11, p.z); flag.rotation.y = -0.1; g.add(flag);
+      // Subdivided flag for vertex wave animation
+      var flagGeo = new THREE.PlaneGeometry(1.5, 1, 15, 8);
+      var flag = new THREE.Mesh(flagGeo, p.flagMat);
+      flag.position.set(p.x + 0.8, 11, p.z);
+      flag.rotation.y = -0.1;
+      flag.castShadow = true;
+      // Store original vertex positions for wave displacement
+      flag.userData.origPos = new Float32Array(flagGeo.attributes.position.array);
+      flag.userData.phaseOffset = p.x;
+      flagMeshes.push(flag);
+      g.add(flag);
       var top = new THREE.Mesh(new THREE.SphereGeometry(0.08, 6, 6), M.metal);
       top.position.set(p.x, 12.05, p.z); g.add(top);
     });
@@ -549,14 +579,23 @@ function init3DBuilding(){
     requestAnimationFrame(animate);
     if (!isDragging) sph.theta += 0.0015;
     updateCam();
-    bldg.children.forEach(function(child) {
-      if (child.children) {
-        child.children.forEach(function(c) {
-          if (c.geometry && c.geometry.type === 'PlaneGeometry' && c.position.y > 10) {
-            c.rotation.y = Math.sin(Date.now() * 0.002 + c.position.x) * 0.15 - 0.1;
-          }
-        });
+    // Wave flag vertices
+    var time = Date.now() * 0.003;
+    flagMeshes.forEach(function(flag) {
+      var pos = flag.geometry.attributes.position;
+      var orig = flag.userData.origPos;
+      var phase = flag.userData.phaseOffset;
+      for (var i = 0; i < pos.count; i++) {
+        var ox = orig[i * 3];
+        var oy = orig[i * 3 + 1];
+        var oz = orig[i * 3 + 2];
+        // Amplitude increases from pole edge (left) to flag tip (right)
+        var amt = (ox + 0.75) * 0.22;
+        pos.array[i * 3 + 2] = oz + Math.sin(ox * 4.0 + time + phase) * amt;
+        pos.array[i * 3 + 1] = oy + Math.sin(ox * 3.0 + time * 1.3 + phase) * amt * 0.15;
       }
+      pos.needsUpdate = true;
+      flag.geometry.computeVertexNormals();
     });
     renderer.render(scene, camera);
   }
